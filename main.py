@@ -37,3 +37,10 @@ for x in members:
         birthdaysForTargetMonth.append(x)
 
 sortedNamesByDay = sorted(birthdaysForTargetMonth, key=lambda i: i["Birthdate"].day)
+
+names = []
+
+for x in sortedNamesByDay:
+    names.append(x["Name"])
+
+print(names)
