@@ -37,6 +37,3 @@ for x in members:
         birthdaysForTargetMonth.append(x)
 
 sortedNamesByDay = sorted(birthdaysForTargetMonth, key=lambda i: i["Birthdate"].day)
-
-for x in sortedNamesByDay:
-    print(x)
