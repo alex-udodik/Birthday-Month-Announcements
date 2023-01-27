@@ -1,1 +1,5 @@
 *.xlsx
+*.csv
+env/
+.env
+/packages
