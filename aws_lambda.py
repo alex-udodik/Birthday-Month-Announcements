@@ -14,11 +14,25 @@ def getNextMonth():
         currentMonth += 1
 
     return currentMonth
+
+def getNextMonthName():
+    currentMonth = datetime.now().month
+
+    if currentMonth == 12:
+        currentMonth = 1
+    else:
+        currentMonth += 1
+
+    datetime_object = datetime.strptime(str(currentMonth), "%m")
+    full_month_name = datetime_object.strftime("%B")
+    return full_month_name
+
+def sendEmail(names):
+    monthName = getNextMonthName()
     
-def sendEmail():
     # Replace sender@example.com with your "From" address.
     # This address must be verified with Amazon SES.
-    SENDER = "Sender Name <>"
+    SENDER = "*** <>"
     
     # Replace recipient@example.com with a "To" address. If your account 
     # is still in the sandbox, this address must be verified.
@@ -28,27 +42,16 @@ def sendEmail():
     AWS_REGION = "us-west-2"
     
     # The subject line for the email.
-    SUBJECT = "Amazon SES Test (SDK for Python)"
+    SUBJECT = "FUPC Members Birthdays for " + monthName
     
+    para = ""
+    for x in names:
+        para += x
+        para += "\n"
+        
     # The email body for recipients with non-HTML email clients.
-    BODY_TEXT = ("Amazon SES Test (Python)\r\n"
-                 "This email was sent with Amazon SES using the "
-                 "AWS SDK for Python (Boto)."
-                )
+    BODY_TEXT = ("FUPC Members Birthdays for " + monthName + "\r\n\n" + para + "\n" + "This email was sent with Amazon SES using the AWS SDK for Python (Boto).")
                 
-    # The HTML body of the email.
-    BODY_HTML = """<html>
-    <head></head>
-    <body>
-      <h1>Amazon SES Test (SDK for Python)</h1>
-      <p>This email was sent with
-        <a href='https://aws.amazon.com/ses/'>Amazon SES</a> using the
-        <a href='https://aws.amazon.com/sdk-for-python/'>
-          AWS SDK for Python (Boto)</a>.</p>
-    </body>
-    </html>
-                """            
-    
     # The character encoding for the email.
     CHARSET = "UTF-8"
     
@@ -66,10 +69,6 @@ def sendEmail():
             },
             Message={
                 'Body': {
-                    'Html': {
-                        'Charset': CHARSET,
-                        'Data': BODY_HTML,
-                    },
                     'Text': {
                         'Charset': CHARSET,
                         'Data': BODY_TEXT,
@@ -115,7 +114,7 @@ def lambda_handler(event, context):
     for x in sortedNamesByDay:
         names.append(x["Name"])
     
-    sendEmail()
+    sendEmail(names)
     
     return {
         'statusCode': 200,
